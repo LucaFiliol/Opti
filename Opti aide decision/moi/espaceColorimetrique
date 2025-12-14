@@ -1,0 +1,43 @@
+import cv2
+import numpy
+
+img = cv2.imread("images/photo.jpg")
+img = cv2.imread("C:\\Users\\lucaf\\OneDrive\\Images\\Screenshots\\jornithorinque.png")
+if img is None:
+    raise Exception("Impossible de lire l'image")
+
+# OpenCV travaille en BGR -> conversion vers RGB pour base CMY
+img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# HSV + HSL
+img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+img_hsl = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
+
+# YUV + YCbCr
+img_yuv = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
+img_ycbcr = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
+
+# CIE-Lab
+img_lab = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
+
+# XYZ
+img_xyz = cv2.cvtColor(img, cv2.COLOR_BGR2XYZ)
+
+# CMY
+img_rgb_norm = img_rgb.astype(numpy.float32) / 255.0
+img_cmy = 1.0 - img_rgb_norm
+img_cmy = (img_cmy * 255).astype(numpy.uint8)
+
+# Affichage
+cv2.imshow("Original (BGR)", img)
+cv2.imshow("RGB", img_rgb)
+cv2.imshow("HSV", img_hsv)
+cv2.imshow("HSL", img_hsl)
+cv2.imshow("YUV", img_yuv)
+cv2.imshow("YCbCr", img_ycbcr)
+cv2.imshow("CIE Lab", img_lab)
+cv2.imshow("XYZ", img_xyz)
+cv2.imshow("CMY", img_cmy)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()

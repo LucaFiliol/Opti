@@ -1,0 +1,18 @@
+import cv2 as cv
+import numpy as np
+
+
+imgNG = np.zeros((256,512,1), np.uint16)
+taille_case = 32   
+
+for i in range(imgNG.shape[0]):
+    for j in range(imgNG.shape[1]):
+        if ((i // taille_case) + (j // taille_case)) % 2 == 0:
+            imgNG[i, j] = 0        # noir
+        else:
+            imgNG[i, j] = 65535    # blanc
+
+
+cv.imshow("Damier", imgNG)
+cv.waitKey(0)
+cv.destroyAllWindows()

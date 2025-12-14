@@ -1,0 +1,46 @@
+import cv2 as cv
+import numpy as np
+
+def compute_histogram_color(img, nb_classes):
+    assert len(img.shape) == 3  # Image couleur
+
+    hauteur, largeur = 512, 1024
+    img_hist_superpose = np.zeros((hauteur, largeur, 3), dtype=np.uint8)
+
+    colors = [(255,0,0), (0,255,0), (0,0,255)]  # BGR
+
+    # ------- Affichage séparé -------
+    for i, col in enumerate(colors):
+        hist = cv.calcHist([img], [i], None, [nb_classes], [0, 256])
+        hist = cv.normalize(hist, hist).flatten()
+
+        img_hist = np.zeros((hauteur, largeur, 3), dtype=np.uint8)
+        max_val = hist.max()
+
+        for h in range(nb_classes):
+            p1 = (int(h * largeur / nb_classes), hauteur)
+            p2 = (int((h + 1) * largeur / nb_classes),
+                  int(hauteur - (hist[h] / max_val * hauteur)))
+
+            cv.rectangle(img_hist, p1, p2, col, -1)
+            cv.rectangle(img_hist, p1, p2, (127,127,127), 1)
+
+        cv.imshow(f"Histogramme {['Bleu','Vert','Rouge'][i]}", img_hist)
+
+    # ------- Histogrammes superposés -------
+    for i, col in enumerate(colors):
+        hist = cv.calcHist([img], [i], None, [nb_classes], [0, 256])
+        hist = cv.normalize(hist, hist).flatten()
+        max_val = hist.max()
+
+        for h in range(nb_classes):
+            p1 = (int(h * largeur / nb_classes), hauteur)
+            p2 = (int((h + 1) * largeur / nb_classes),
+                  int(hauteur - (hist[h] / max_val * hauteur)))
+
+            cv.rectangle(img_hist_superpose, p1, p2, col, -1)
+
+    cv.imshow("Histogramme superposé BGR", img_hist_superpose)
+
+compute_histogram_color(cv.imread("C:\\Users\\lucaf\\OneDrive\\Images\\Screenshots\\moiChad.png"), 250)
+cv.waitKey(20000)
